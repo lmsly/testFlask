@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+{% import "wtf.html" as wtf %}
+{% block content %}
+    <div class="text-center">
+        <div class="page-header">
+            <h1>Hello!</h1>
+        </div>
+    </div>
+
+
+
+        <table align="center">
+            <tr>
+                <td>
+                    <form class="" method="POST" autocomplete="off">
+                        <div class="input-group">
+                            {{ form.csrf_token }}
+                            {{ wtf.quick_form(form) }}
+                        </div>
+                    </form>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    {% for message in get_flashed_messages() %}
+                        <div class="alert alert-warning">
+                            <button type="button" class="close" data-dismiss="alert">&times;</button>
+                            {{ message }}
+                        </div>
+                    {% endfor %}
+                </td>
+            </tr>
+        </table>
+
+{% endblock %}

@@ -1,0 +1,168 @@
+{% extends 'index.html' %}
+{% import "wtf.html" as wtf %}
+{% import "page.html" as macros %}
+{% import "loadings.html" as loading %}
+{% block content %}
+
+    {#    loading.....等待提示#}
+    {{ loading.loading() }}
+
+
+    <div style="padding: 20px 100px 10px;">
+        <form class="bs-example bs-example-form" role="form" id="test_form" method="POST" autocomplete="off">
+            <div class="input-group">
+                {{ form.csrf_token }}
+                {{ form.region.label(class="input-group-addon") }}{{ form.region(class="form-control") }}
+                {{ form.small_area.label(class="input-group-addon") }}{{ form.small_area(class="form-control") }}
+                {{ form.hospname.label(class="input-group-addon") }}{{ form.hospname(class="form-control") }}
+            </div>
+            <br>
+            <div class="input-group">
+                {{ form.marketing_package.label(class="input-group-addon ") }}{{ form.marketing_package(class="form-control") }}
+                {{ form.start_month.label(class="input-group-addon") }}{{ form.start_month(class="form-control") }}
+                {{ form.stop_month.label(class="input-group-addon") }}{{ form.stop_month(class="form-control") }}
+            </div>
+            <br>
+            <div>
+                {{ form.submit(class="btn btn-success") }}
+                {#            <button type="button" id="submit" class="btn btn-success">查询</button>#}
+                <button type="button" class="btn btn-success"><span class="glyphicon glyphicon-repeat"></span>刷新</button>
+                <button type="button" class="btn btn-success" id="vshow"><span class="glyphicon glyphicon-picture"></span>可视化查询
+                </button>
+            </div>
+
+
+            <!-- 模态框（Modal） -->
+            <div class="modal fade" style="overflow: auto" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+                 aria-hidden="true">
+                <div style="width:1200px;height:2000px" class="modal-dialog">
+                    <div class="modal-content" >
+                        <div class="modal-header">
+                            <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+                                &times;
+                            </button>
+                        </div>
+                        <div class="modal-body" id="myModaltest">
+                            在这里添加一些文本
+                        </div>
+                    </div><!-- /.modal-content -->
+                </div><!-- /.modal -->
+            </div>
+
+        </form>
+        <br>
+        <div class="table-responsive">
+            <table class=" table table-bordered table table-striped table table-hover" id="exampleTable">
+                <thead>
+                <tr>
+                    <th>序号</th>
+                    <th>地区</th>
+                    <th>小区</th>
+                    <th>客户名称</th>
+                    <th>营销套餐</th>
+                    <th>科室</th>
+                    <th>医生</th>
+                    <th>标本量</th>
+                    <th>标准价格</th>
+                    <th>折前价格</th>
+                    <th>折后价格</th>
+                    <th>实际扣率</th>
+                    <th>月份</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% for data in list %}
+                    <tr>
+                        <td>{{ data.id }}</td>
+                        <td>{{ data.region }}</td>
+                        <td>{{ data.small_area }}</td>
+                        <td>{{ data.hospname }}</td>
+                        <td>{{ data.marketing_package }}</td>
+                        <td>{{ data.department }}</td>
+                        <td>{{ data.doctor }}</td>
+                        <td>{{ data.number }}</td>
+                        <td>{{ data.standard_price }}</td>
+                        <td>{{ data.not_price }}</td>
+                        <td>{{ data.ture_price }}</td>
+                        <td>{{ data.actual_price }}</td>
+                        <td>{{ data.month }}</td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <div class="pagination">
+            <ul class="pagination">
+                {% if pagination %}
+                    <div class="pagination">
+                        {{ macros.pagination_widget(pagination, '.ajaxPage') }}
+                    </div>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+
+{% endblock content %}
+{% block jsp %}
+    <script type="text/javascript">
+
+
+        {#--------------------------------------点击提交后loading提示---------------------------------#}
+        $("form").submit(function (e) {
+            $('#loadings').modal('show');//loading等待提示显示。
+        });
+
+
+        {#--------------------------------------ajax向后端提供分页----------------------------------------------#}
+        $(document).on('click', ' .page-link3 ', function (event) {
+            $('#loadings').modal('show');//loading等待提示显示。
+
+            var link = $(this).attr('href');
+            $.ajax({
+                type: 'POST',
+                url: link,
+                data: {
+                    region: $("#region").val(),
+                    small_area: $("#small_area").val(),
+                    hospname: $("#hospname").val(),
+                    marketing_package: $("#marketing_package").val(),
+                    start_month: $("#start_month").val(),
+                    stop_month: $("#stop_month").val()
+                },
+                success: function (data) {
+                    $('#loadings').modal('hide');//loading等待提示隐藏。
+                    $("body").html(data);
+                }
+            });
+            event.preventDefault();
+
+        });
+
+        $(document).on('click', '#vshow', function (event) {
+            $('#loadings').modal('show');//loading等待提示显示。
+
+            $.ajax({
+                type: 'POST',
+                url: '/viewshow',
+                data: {
+                    region: $("#region").val(),
+                    small_area: $("#small_area").val(),
+                    hospname: $("#hospname").val(),
+                    marketing_package: $("#marketing_package").val(),
+                    start_month: $("#start_month").val(),
+                    stop_month: $("#stop_month").val()
+                },
+                success: function (data) {
+                    $('#loadings').modal('hide');//loading等待提示隐藏。
+
+                    $("#myModaltest").html(data);
+                    $('#myModal').modal('show')
+                }
+            });
+            event.preventDefault();
+
+        });
+
+    </script>
+{% endblock jsp %}

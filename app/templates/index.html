@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% block headnavbar %}
+            <div id="bobyTest">
+                <div>
+                    <H1 style="padding: 20px 100px 10px;">KINGMED</H1>
+                </div>
+                <div class="navbar-collapse collapse" style="padding: 20px 100px 10px;">
+                    <ul class="nav nav-pills" style="font-size: 25px">
+                        <li role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                               aria-haspopup="true"
+                               aria-expanded="false">
+                                基础查询<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu nav-stacked nav-pills">
+                                <li><a href="#">查询</a></li>
+                                <li><a href="#">增加</a></li>
+                                <li><a href="#">修改</a></li>
+                                <li><a href="#">删除</a></li>
+                            </ul>
+                        </li>
+                        <li role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                               aria-haspopup="true"
+                               aria-expanded="false">
+                                双向查询<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu nav-stacked nav-pills">
+                                <li><a href="#">按区域</a></li>
+                                <li><a href="#">账务盘点</a></li>
+                                <li><a href="#">进销存一览</a></li>
+                            </ul>
+                        </li>
+                        <li role="presentation" class="dropdown">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#" role="button"
+                               aria-haspopup="true"
+                               aria-expanded="false">
+                                删除<span class="caret"></span>
+                            </a>
+                            <ul class="dropdown-menu nav-stacked nav-pills">
+                                <li><a href="#">产品类目维护</a></li>
+                                <li><a href="#">资金池维护</a></li>
+                                <li><a href="#">密码修改</a></li>
+                            </ul>
+                        </li>
+
+                        <ul class="nav navbar-nav navbar-right">
+                            <li><a href="#">{{ current_user.get_id() }}</a></li>
+                            <li><a href="{{ url_for('logout') }}">退出登录</a></li>
+                        </ul>
+                    </ul>
+                </div>
+            </div>
+            {% endblock headnavbar %}

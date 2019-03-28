@@ -1,0 +1,49 @@
+{% macro pagination_widget(pagination, endpoint) %}
+    <ul class="pagination">
+        <li{% if not pagination.has_prev %} class="disabled"{% endif %}>
+            <a class="page-link3"
+               href="{% if pagination.has_prev %}{{ url_for(endpoint,page = pagination.page - 1, **kwargs) }}
+            {% else %}#{% endif %}">&laquo;
+            </a>
+        </li>
+        {% for p in pagination.iter_pages(left_edge=1, left_current=2, right_current=3, right_edge=1) %}
+            {% if p %}
+                {% if p == pagination.page %}
+                    <li class="active">
+                        <a class="page-link3" href="{{ url_for(endpoint, page = p, **kwargs) }}">{{ p }}</a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a class="page-link3" href="{{ url_for(endpoint, page = p, **kwargs) }}">{{ p }}</a>
+                    </li>
+                {% endif %}
+            {% endif %}
+        {% endfor %}
+        <li{% if not pagination.has_next %} class="disabled"{% endif %}>
+            <a class="page-link3" href="
+
+
+                    {% if pagination.has_next %}{{ url_for(endpoint,page = pagination.page + 1, **kwargs) }}{% else %}#{% endif %}">&raquo;</a>
+        </li>
+    </ul>
+
+    {#-----------------------------------------此处为导入可拖拽的表格JS--------------------------------------------------#}
+    {#    需要导入：<script src="{{ url_for('static', filename='js/colResizable-1.6.js') }}"></script>#}
+    {#              <script src="{{ url_for('static', filename='js/bootstrap-table-resizable.js') }}"></script>#}
+
+
+    <script type="text/javascript">
+        $("body").removeClass('modal-open');
+        $("body").css('padding-right', '0px');
+        $("#exampleTable").colResizable({
+
+            liveDrag: true,//实时显示滑动位置
+            gripInnerHtml: "<div class='grip'></div>",
+            //draggingClass: "dragging",
+            postbackSafe: true,//刷新后保留之前的拖拽宽度
+            headerOnly: true,
+            resizeMode: "overflow",
+            //onResize: onSampleResized
+        });
+    </script>
+{% endmacro %}
